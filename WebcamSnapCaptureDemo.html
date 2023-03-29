@@ -39,7 +39,7 @@
 		const stream = await navigator.mediaDevices.getUserMedia(constraints);
 		handleSuccess(stream);
 	}catch(e){
-		errorMsgElement.innerHtml = navigator.getUserMedia.error;
+		navigator.getUserMedia.error;
 	}
 	
    }
