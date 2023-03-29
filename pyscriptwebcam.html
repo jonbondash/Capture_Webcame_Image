@@ -33,52 +33,35 @@
 </py-config>
 
                 <py-script>
-                    import cv2
-from time import sleep
-import os
+                    import numpy as np
+import cv2
 
-key = cv2.waitKey(1)
-webcam = cv2.VideoCapture(0)
-sleep(2)
-while True:
+cap = cv2.VideoCapture(0)
+i=1
+while(True):
+	# Capture frame-by-frame
+	ret, frame = cap.read()
 
-    try:
-        check, frame = webcam.read()
-        print(check)  # prints true as long as the webcam is running
-        print(frame)  # prints matrix values of each frame
-        cv2.imshow("Capturing", frame)
-        key = cv2.waitKey(1)
-        if key == ord('s'):
+	# Operations on the frame
+	frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+	frame = cv2.GaussianBlur(frame, (7,7), 3)
+	frame = cv2.adaptiveThreshold(frame, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+	ret, new = cv2.threshold(frame, 25, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
-            cv2.imwrite(os.path.join('/Capturing_Images_From_WebCam/Data/Output',
-                                     'saved_img.jpg'), frame)
-            webcam.release()
-            print("Processing image...")
-            img_ = cv2.imread('saved_img.jpg', cv2.IMREAD_ANYCOLOR)
-            print("Converting RGB image to grayscale...")
-            gray = cv2.cvtColor(img_, cv2.COLOR_BGR2GRAY)
-            print("Converted RGB image to grayscale...")
-            print("Resizing image to 28x28 scale...")
-            img_ = cv2.resize(gray, (30, 30))
-            print("Resized...")
-            img_resized = cv2.imwrite(os.path.join('/Capturing_Images_From_WebCam/Data/Output',
-                                                   'saved_img-final.jpg'), img_)
-            print("Image saved!")
+	# Display the resulting frame
+	cv2.imshow('frame',new)
 
-            break
+	#Save required number of images
+	img_name='img' + str(i) + '.png'
+	if i<6000 :
+		cv2.imwrite(img_name, new)
+	i=i+1
+	if cv2.waitKey(1) & 0xFF == ord('q'):
+		break
 
-        elif key == ord('q'):
-            webcam.release()
-            cv2.destroyAllWindows()
-            break
-
-    except KeyboardInterrupt:
-        print("Turning off camera.")
-        webcam.release()
-        print("Camera off.")
-        print("Program ended.")
-        cv2.destroyAllWindows()
-        break
+# When everything done, release the capture
+cap.release()
+cv2.destroyAllWindows()
 
                 </py-script>
             </py-tutor>
