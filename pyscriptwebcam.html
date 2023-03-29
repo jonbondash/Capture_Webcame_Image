@@ -23,18 +23,17 @@
             <div id="mpl"></div>
 
             <py-tutor>
-                
+                <py-config>
+  packages = [
+                     "numpy",
+                        "sympy", "matplotlib","opencv-python"
+                    ]
+                    plugins = [
+                      "https://pyscript.net/latest/plugins/python/py_tutor.py"
+                    ]
+</py-config>
 
-<py-config>
-      - autoclose_loader: true
-      - runtimes:
-        - src: "https://cdn.jsdelivr.net/pyodide/dev/full/pyodide.js"
-          name: pyodide-dev
-          lang: python
-    </py-config>
-    <py-env>
-      - opencv-python
-    </py-env>
+
 
                 <py-script>
                     import numpy as np
