@@ -1,0 +1,38 @@
+from browser import document, window
+
+html = """
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Webcam Capture</title>
+  </head>
+  <body>
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <button id="capture">Capture</button>
+    <script>
+      const video = document.getElementById('video');
+      const canvas = document.getElementById('canvas');
+      const captureButton = document.getElementById('capture');
+      
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          video.srcObject = stream;
+          video.play();
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      
+      captureButton.addEventListener('click', () => {
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL();
+        console.log(dataURL);
+        window.pyodide.runPython(`print('Image data URL:', '${dataURL}')`);
+      });
+    </script>
+  </body>
+</html>
+"""
+
+document <= html
